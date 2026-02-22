@@ -68,3 +68,25 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+1. Project Proposal 
+
+Project Idea: "Visual Discovery App" is a web-based platform designed for finding, categorizing, and saving visual content. It serves as an interactive image gallery where users can explore inspiration for various projects.
+Target Audience: Designers, artists, content creators, and hobbyists looking for structured visual inspiration.
+Problem it solves: Finding and organizing visual references across the internet can be chaotic. This app provides a centralized, user-friendly space to discover, filter, and interact with images (similar to moodboards).
+MVP Features: An interactive masonry image feed, category-based filtering, individual image view, and basic engagement features (like/comment simulation).
+
+2. SPA Theory Questions 
+
+What is a Single Page Application (SPA)?
+A Single Page Application (SPA) is a web application or website that interacts with the user by dynamically rewriting the current web page with new data from the web server, instead of the default method of a web browser loading entire new pages. This results in faster transitions and a more native app-like experience.
+
+How does SPA differ from traditional Multi-Page Applications (MPA)?
+In a traditional MPA, every time a user clicks a link or submits a form, the browser requests a completely new HTML page from the server, causing a full page reload. In an SPA, only the initial HTML, CSS, and JS are loaded once. Subsequent interactions fetch only necessary data (usually via JSON) and update the DOM dynamically without reloading the page.
+
+What is the Virtual DOM?
+The Virtual DOM is a lightweight, in-memory representation of the actual Real DOM. When a component's state changes, React updates the Virtual DOM first, compares it with the previous version (a process called "diffing"), and calculates the most efficient way to update the Real DOM, changing only the necessary elements.
+
+Why does React use a component-based architecture?
+Component-based architecture allows developers to break down complex user interfaces into small, isolated, and reusable pieces of code (components). This makes the code easier to maintain, test, and debug. It also promotes code reusability across the application, significantly speeding up the development process.
