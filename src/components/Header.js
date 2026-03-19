@@ -1,15 +1,22 @@
 import React from 'react';
+import UserProfile from './UserProfile';
 
-function Header() {
+// Принимаем searchTerm и функцию onSearchChange
+function Header({ searchTerm, onSearchChange }) {
   return (
     <header className="app-header">
-      <h1>Visual Discovery App</h1>
-      <nav>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/explore">Explore</a></li>
-        </ul>
-      </nav>
+      
+      <div className="search-bar">
+        <span className="search-icon">🔍</span>
+        <input 
+          type="text" 
+          placeholder="Поиск" 
+          value={searchTerm} // Привязываем значение инпута к стейту
+          onChange={onSearchChange} // Обновляем стейт при каждом нажатии клавиши
+        />
+      </div>
+
+      <UserProfile />
     </header>
   );
 }

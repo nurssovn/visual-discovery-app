@@ -1,77 +1,530 @@
 /* Базовые настройки */
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #ffffff;
+  color: #111;
 }
 
+/* Главный контейнер (Flexbox для бокового меню и правой части) */
 .app-container {
   display: flex;
+}
+
+/* --- ЛЕВОЕ МЕНЮ (SIDEBAR) --- */
+.sidebar {
+  width: 80px;
+  height: 100vh;
+  position: fixed; /* Прилеплено к левому краю */
+  left: 0;
+  top: 0;
+  display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0 30px 0; /* Отступ снизу 30px, чтобы шестеренка влезла */
+  background-color: #fff;
+  z-index: 100;
+  box-sizing: border-box; /* Запрещаем отступам увеличивать 100vh */
+}
+
+.sidebar-top, .sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Центрируем иконки по вертикальной оси */
+  width: 100%;
+  gap: 15px;
+}
+
+.logo-btn { 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer; 
+  margin-bottom: 10px; 
+  padding: 12px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 50%;
+  transition: background 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-btn:hover { 
+  background-color: #f0f0f0; 
+}
+
+
+/* --- ПРАВАЯ ЧАСТЬ (HOME) --- */
+.home-page {
+  margin-left: 80px; /* Отступ на ширину левого меню */
+  width: calc(100% - 80px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- ШАПКА (HEADER) --- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+/* Поиск */
+.search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: #e9e9e9;
+  border-radius: 24px;
+  padding: 12px 20px;
+  margin-right: 20px;
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 16px;
+  margin-left: 10px;
+  outline: none;
+}
+
+/* Профиль и меню */
+.user-profile {
+  position: relative;
+}
+
+.avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  object-fit: cover;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 15px;
+  width: 200px;
+  z-index: 100;
+}
+
+.dropdown-menu button {
+  background: #e60023;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* --- КАТЕГОРИИ (CATEGORY NAV) --- */
+.category-nav {
+  display: flex;
+  gap: 10px;
+  padding: 0 20px 20px 20px;
+}
+
+.category-nav button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 0;
+  border-bottom: 3px solid transparent;
+}
+
+.category-nav button.active {
+  border-bottom: 3px solid #111;
+}
+
+/* --- ЛЕНТА КАРТИНОК (MASONRY GRID) --- */
+.main-content {
+  padding: 0 20px;
+}
+
+.masonry-grid {
+  column-count: 3; /* Сетка в стиле Pinterest */
+  column-gap: 15px;
+}
+
+@media (min-width: 1200px) { .masonry-grid { column-count: 4; } }
+@media (min-width: 1600px) { .masonry-grid { column-count: 5; } }
+
+/* Карточка */
+.pin-card {
+  position: relative;
+  margin-bottom: 15px;
+  break-inside: avoid; /* Чтобы картинки не разрывались */
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.pin-card img {
+  width: 100%;
+  display: block;
+  border-radius: 16px;
+}
+
+/* Кнопка "Сохранить" (как было раньше) */
+.save-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #e60023;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background-color 0.2s;
+}
+
+.save-btn:hover {
+  background-color: #ad081b;
+}
+
+/* НОВЫЙ СТИЛЬ: Когда пин сохранен */
+.save-btn.saved {
+  background-color: #111; /* Черный цвет */
+  opacity: 1; /* Сохраненная кнопка всегда видима! */
+}
+/* --- МОДАЛЬНОЕ ОКНО ДЛЯ ФОРМЫ (ADD PIN) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.add-pin-form-container {
+  background: #fff;
+  width: 800px;
+  max-width: 90%;
+  border-radius: 16px;
+  padding: 40px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px; right: 20px;
+  background: none; border: none;
+  font-size: 24px; cursor: pointer;
+  color: #777;
+}
+
+.pin-form {
+  display: flex;
+  gap: 30px;
+}
+/* Кнопка "Удалить" при наведении (без белого фона) */
+.delete-btn {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background-color: transparent; /* Полностью прозрачный фон */
+  border: none;
+  font-size: 24px; /* Сделали саму иконку побольше */
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0; 
+  transition: opacity 0.2s, transform 0.2s;
+  
+  /* Легкая тень для самой корзинки, чтобы она не сливалась со светлыми фото */
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6); 
+}
+
+/* При наведении на саму корзинку она будет слегка увеличиваться */
+.delete-btn:hover {
+  transform: scale(1.2); 
+}
+
+/* Показываем кнопки только при наведении мышки на карточку */
+.pin-card .save-btn { opacity: 0; transition: opacity 0.2s; }
+.pin-card:hover .save-btn,
+.pin-card:hover .delete-btn {
+  opacity: 1; 
+}
+
+/* Левая часть (Картинка) */
+.form-left {
+  flex: 1;
+}
+
+.image-preview-box {
+  background-color: #e9e9e9;
+  border-radius: 16px;
+  height: 100%;
+  min-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border: 2px dashed #ccc;
+}
+
+.empty-preview {
+  text-align: center;
+  color: #555;
+  padding: 20px;
+}
+
+.empty-preview span {
+  font-size: 30px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Правая часть (Инпуты) */
+.form-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 12px;
+  color: #111;
+  margin-left: 5px;
+}
+
+.form-right input, .form-right textarea, .form-right select {
+  background-color: #e9e9e9;
+  border: none;
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+}
+
+.form-right input:focus, .form-right textarea:focus, .form-right select:focus {
+  box-shadow: 0 0 0 2px #73b8fc; /* Легкое свечение при фокусе */
+}
+
+.title-input {
+  font-size: 24px !important;
+  font-weight: bold;
+}
+
+.form-right textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.save-pin-btn {
+  background-color: #e60023;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.save-pin-btn:hover {
+  background-color: #ad081b;
+}
+/* --- УВЕДОМЛЕНИЯ (TOAST) --- */
+
+.toast {
+  position: fixed; /* Зафиксировано на экране */
+  bottom: 20px; /* Отступ от низа */
+  left: 50%; /* Выравнивание по центру по горизонтали */
+  transform: translateX(-50%); /* Сдвиг на половину ширины влево для точного центрирования */
+  
+  background-color: #e9e9e9; /* Светло-серый фон (как на скриншоте) */
+  color: #555; /* Темно-серый текст для контраста */
+  
+  padding: 12px 24px; /* Внутренние отступы */
+  border-radius: 16px; /* Сильно скругленные углы */
+  font-size: 14px;
+  font-weight: bold;
+  
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Легкая тень */
+  z-index: 2000; /* Поверх всего */
+  
+  /* Анимация появления */
+  animation: slideInUp 0.3s ease-out;
+}
+
+/* Анимация: Всплытие снизу */
+@keyframes slideInUp {
+  from {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+/* =========================================
+   ИСПРАВЛЕННАЯ СТРАНИЦА ДЕТАЛЕЙ (PIN DETAIL)
+   ========================================= */
+
+.pin-detail-page {
+  margin-left: 80px;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
   min-height: 100vh;
 }
 
-/* Header */
-.app-header {
-  background-color: #fff;
-  padding: 15px 40px;
+.pin-detail-card {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 32px;
+  width: 100%;
+  max-width: 1016px;
+  height: fit-content;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* Левая часть - Главная картинка */
+.pin-detail-left {
+  flex: 1.2;
+  padding: 20px; /* Отступ чтобы картинка не липла к краям */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-pin-image {
+  width: 100%;
+  border-radius: 24px; /* Твоё скругление */
+  object-fit: cover;
+  display: block;
+}
+
+/* Правая часть - Инфо и похожие */
+.pin-detail-right {
+  flex: 1;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #f0f0f0;
+}
+
+.pin-detail-right-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
 }
 
-.app-header h1 {
-  margin: 0;
-  color: #e60023; /* Цвет в стиле Pinterest */
-  font-size: 24px;
+.back-arrow-btn {
+  background: none; border: none;
+  font-size: 24px; cursor: pointer;
+  padding: 8px; border-radius: 50%;
 }
+.back-arrow-btn:hover { background-color: #f0f0f0; }
 
-.app-header ul {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-  margin: 0;
-  padding: 0;
-}
-
-.app-header a {
-  text-decoration: none;
-  color: #333;
+.pin-detail-title {
+  font-size: 28px;
   font-weight: bold;
+  margin: 0 0 10px 0;
 }
 
-/* Main Content */
-.main-content {
-  flex: 1;
-  padding: 40px;
-  text-align: center;
-}
-
-.placeholder-grid {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
+/* Сетка похожих картинок справа */
+.related-section {
   margin-top: 30px;
+  flex-grow: 1;
 }
 
-.card {
-  background-color: #e9ecef;
-  width: 200px;
-  height: 250px;
-  border-radius: 15px;
+.related-mini-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.related-mini-grid img {
+  width: 100%;
+  aspect-ratio: 1; /* Делаем их квадратными как ты просил */
+  object-fit: cover;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.related-mini-grid img:hover { opacity: 0.8; }
+
+/* Аватарки и комменты */
+.user-avatar-circle {
+  width: 32px; height: 32px;
+  border-radius: 50%; background-color: #111;
+}
+.grey-avatar { background-color: #e9e9e9; }
+
+.comment-input-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #6c757d;
-  font-weight: bold;
+  gap: 10px;
+  background-color: #f0f0f0;
+  padding: 12px 16px;
+  border-radius: 30px;
+  margin-top: 20px;
 }
 
-/* Footer */
-.app-footer {
-  text-align: center;
-  padding: 20px;
-  background-color: #fff;
-  border-top: 1px solid #ddd;
+.comment-input-wrapper input {
+  border: none; background: transparent;
+  outline: none; flex: 1;
+}
+
+/* --- МОДАЛКА И ОСТАЛЬНОЕ --- */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex; justify-content: center; align-items: center; z-index: 1000;
 }
