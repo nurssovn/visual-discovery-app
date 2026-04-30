@@ -1,26 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AppContext } from '../context/AppContext'; // Берем контекст
 
 function UserProfile() {
-  // Используем состояние, чтобы меню открывалось и закрывалось
   const [isOpen, setIsOpen] = useState(false);
+  const { user, logout, openLogin } = useContext(AppContext);
+  const navigate = useNavigate();
 
-  // Событие 3: Клик по аватарке открывает/закрывает меню
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const handleLogout = () => {
+    logout();
+    setIsOpen(false);
+    navigate('/');
   };
 
+  // Если юзера нет, показываем кнопку "Войти" вместо аватарки
+  if (!user) {
+   return (
+    <button 
+      onClick={openLogin} // <--- ВЫЗЫВАЕМ ОТКРЫТИЕ МОДАЛКИ
+      className="login-nav-btn"
+      style={{ padding: '10px 18px', background: '#e60023', color: 'white', border: 'none', borderRadius: '24px', cursor: 'pointer', fontWeight: 'bold' }}
+    >
+      Войти
+    </button>
+   );
+  }
+
+  // Если юзер есть, показываем аватарку и меню
   return (
     <div className="user-profile">
-      <div className="avatar" onClick={toggleMenu}>
-        <img src="https://i.pinimg.com/736x/0b/1f/52/0b1f52bada4d356515aff0a2d5d2b6f0.jpg" alt="Avatar" />
+      <div className="avatar" onClick={toggleMenu} style={{ cursor: 'pointer' }}>
+        <img src={user.avatar} alt="Avatar" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
       </div>
       
-      {/* Если isOpen === true, показываем меню */}
       {isOpen && (
         <div className="dropdown-menu">
-          <p>username: <b>@lunassi</b></p>
-          <hr />
-          <button onClick={() => alert('Выход из аккаунта')}>Выход</button>
+          <div style={{ padding: '10px', fontWeight: 'bold' }}>
+            {user.name} <br/>
+            <span style={{ fontSize: '12px', color: 'gray' }}>{user.username}</span>
+          </div>
+          <hr style={{ margin: '5px 0' }}/>
+          <Link 
+            to="/profile" 
+            className="dropdown-item profile-link"
+            onClick={() => setIsOpen(false)}
+            style={{ display: 'block', padding: '10px', textDecoration: 'none', color: 'inherit' }}
+          >
+            Мои сохранения
+          </Link>
+          <button 
+            onClick={handleLogout}
+            style={{ width: '100%', padding: '10px', marginTop: '5px', background: '#f0f0f0', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
+          >
+            Выход
+          </button>
         </div>
       )}
     </div>

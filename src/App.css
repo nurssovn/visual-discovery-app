@@ -1,13 +1,48 @@
-/* Базовые настройки */
+
+:root {
+  --bg-color: #ffffff;
+  --text-color: #111111;
+  --sidebar-bg: #ffffff;
+  --header-bg: rgba(255, 255, 255, 0.75);
+  --card-bg: #ffffff;
+  --input-bg: #e9e9e9;
+  --secondary-bg: #f0f0f0;
+  --modal-bg: #ffffff;
+  --modal-overlay: rgba(0, 0, 0, 0.6);
+  --skeleton-base: #f0f0f0;
+  --skeleton-shine: #f8f8f8;
+  --border-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] {
+  --bg-color: #111111;
+  --text-color: #f5f5f5;
+  --sidebar-bg: #1a1a1a;
+  --header-bg: rgba(17, 17, 17, 0.75);
+  --card-bg: #262626;
+  --input-bg: #333333;
+  --secondary-bg: #2b2b2b;
+  --modal-bg: #262626;
+  --modal-overlay: rgba(0, 0, 0, 0.85);
+  --skeleton-base: #262626;
+  --skeleton-shine: #333333;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #ffffff;
-  color: #111;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Главный контейнер (Flexbox для бокового меню и правой части) */
+/* Главный контейнер */
 .app-container {
   display: flex;
 }
@@ -16,23 +51,25 @@ body {
 .sidebar {
   width: 80px;
   height: 100vh;
-  position: fixed; /* Прилеплено к левому краю */
+  position: fixed;
   left: 0;
   top: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0 30px 0; /* Отступ снизу 30px, чтобы шестеренка влезла */
-  background-color: #fff;
+  padding: 20px 0 30px 0;
+  background-color: var(--sidebar-bg);
   z-index: 100;
-  box-sizing: border-box; /* Запрещаем отступам увеличивать 100vh */
+  box-sizing: border-box;
+  transition: background-color 0.3s ease;
+  border-right: 1px solid var(--border-color);
 }
 
 .sidebar-top, .sidebar-bottom {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Центрируем иконки по вертикальной оси */
+  align-items: center;
   width: 100%;
   gap: 15px;
 }
@@ -56,16 +93,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  color: var(--text-color);
 }
 
 .icon-btn:hover { 
-  background-color: #f0f0f0; 
+  background-color: var(--secondary-bg); 
 }
-
 
 /* --- ПРАВАЯ ЧАСТЬ (HOME) --- */
 .home-page {
-  margin-left: 80px; /* Отступ на ширину левого меню */
+  margin-left: 80px;
   width: calc(100% - 80px);
   display: flex;
   flex-direction: column;
@@ -77,10 +114,14 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 15px 20px;
-  background: #fff;
+  background: var(--header-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
-  z-index: 90;
+  z-index: 1000;
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.3s ease;
 }
 
 /* Поиск */
@@ -88,10 +129,11 @@ body {
   flex: 1;
   display: flex;
   align-items: center;
-  background-color: #e9e9e9;
+  background-color: var(--input-bg);
   border-radius: 24px;
   padding: 12px 20px;
   margin-right: 20px;
+  transition: background-color 0.3s ease;
 }
 
 .search-bar input {
@@ -101,6 +143,7 @@ body {
   font-size: 16px;
   margin-left: 10px;
   outline: none;
+  color: var(--text-color);
 }
 
 /* Профиль и меню */
@@ -120,12 +163,13 @@ body {
   position: absolute;
   top: 50px;
   right: 0;
-  background: #fff;
+  background: var(--modal-bg);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   padding: 15px;
   width: 200px;
   z-index: 100;
+  color: var(--text-color);
 }
 
 .dropdown-menu button {
@@ -155,10 +199,11 @@ body {
   cursor: pointer;
   padding: 10px 0;
   border-bottom: 3px solid transparent;
+  color: var(--text-color);
 }
 
 .category-nav button.active {
-  border-bottom: 3px solid #111;
+  border-bottom: 3px solid var(--text-color);
 }
 
 /* --- ЛЕНТА КАРТИНОК (MASONRY GRID) --- */
@@ -167,7 +212,7 @@ body {
 }
 
 .masonry-grid {
-  column-count: 3; /* Сетка в стиле Pinterest */
+  column-count: 3;
   column-gap: 15px;
 }
 
@@ -178,10 +223,12 @@ body {
 .pin-card {
   position: relative;
   margin-bottom: 15px;
-  break-inside: avoid; /* Чтобы картинки не разрывались */
+  break-inside: avoid;
   border-radius: 16px;
   overflow: hidden;
   cursor: zoom-in;
+  background-color: var(--card-bg);
+  /* Удалены глючные transition и transform */
 }
 
 .pin-card img {
@@ -190,7 +237,7 @@ body {
   border-radius: 16px;
 }
 
-/* Кнопка "Сохранить" (как было раньше) */
+/* Кнопка "Сохранить" */
 .save-btn {
   position: absolute;
   top: 15px;
@@ -210,16 +257,45 @@ body {
   background-color: #ad081b;
 }
 
-/* НОВЫЙ СТИЛЬ: Когда пин сохранен */
 .save-btn.saved {
-  background-color: #111; /* Черный цвет */
-  opacity: 1; /* Сохраненная кнопка всегда видима! */
+  background-color: var(--text-color); /* Черный цвет в светлой, белый в темной */
+  color: var(--bg-color); /* Белый текст в светлой, черный в темной */
+  opacity: 1;
 }
+
+/* Кнопка "Удалить" */
+.delete-btn {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0; 
+  transition: opacity 0.2s, transform 0.2s;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  color: white; /* Всегда белая с тенью для видимости поверх фото */
+}
+
+.delete-btn:hover {
+  transform: scale(1.2); 
+}
+
+/* Показываем кнопки только при наведении мышки на карточку */
+.pin-card:hover .save-btn,
+.pin-card:hover .delete-btn {
+  opacity: 1; 
+}
+
 /* --- МОДАЛЬНОЕ ОКНО ДЛЯ ФОРМЫ (ADD PIN) --- */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--modal-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -227,13 +303,14 @@ body {
 }
 
 .add-pin-form-container {
-  background: #fff;
+  background: var(--modal-bg);
+  color: var(--text-color);
   width: 800px;
   max-width: 90%;
   border-radius: 16px;
   padding: 40px;
   position: relative;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
 .close-btn {
@@ -241,42 +318,12 @@ body {
   top: 15px; right: 20px;
   background: none; border: none;
   font-size: 24px; cursor: pointer;
-  color: #777;
+  color: var(--text-color);
 }
 
 .pin-form {
   display: flex;
   gap: 30px;
-}
-/* Кнопка "Удалить" при наведении (без белого фона) */
-.delete-btn {
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  background-color: transparent; /* Полностью прозрачный фон */
-  border: none;
-  font-size: 24px; /* Сделали саму иконку побольше */
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0; 
-  transition: opacity 0.2s, transform 0.2s;
-  
-  /* Легкая тень для самой корзинки, чтобы она не сливалась со светлыми фото */
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6); 
-}
-
-/* При наведении на саму корзинку она будет слегка увеличиваться */
-.delete-btn:hover {
-  transform: scale(1.2); 
-}
-
-/* Показываем кнопки только при наведении мышки на карточку */
-.pin-card .save-btn { opacity: 0; transition: opacity 0.2s; }
-.pin-card:hover .save-btn,
-.pin-card:hover .delete-btn {
-  opacity: 1; 
 }
 
 /* Левая часть (Картинка) */
@@ -285,7 +332,7 @@ body {
 }
 
 .image-preview-box {
-  background-color: #e9e9e9;
+  background-color: var(--input-bg);
   border-radius: 16px;
   height: 100%;
   min-height: 400px;
@@ -293,7 +340,7 @@ body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border: 2px dashed #ccc;
+  border: 2px dashed var(--border-color);
 }
 
 .empty-preview {
@@ -314,7 +361,7 @@ body {
   object-fit: cover;
 }
 
-/* Правая часть (Инпуты) */
+/* Правая часть (Инпуты) - ВОТ ЭТО БЫЛО СЛУЧАЙНО УДАЛЕНО РАНЕЕ */
 .form-right {
   flex: 1;
   display: flex;
@@ -330,12 +377,13 @@ body {
 
 .form-group label {
   font-size: 12px;
-  color: #111;
+  color: var(--text-color);
   margin-left: 5px;
 }
 
 .form-right input, .form-right textarea, .form-right select {
-  background-color: #e9e9e9;
+  background-color: var(--input-bg);
+  color: var(--text-color);
   border: none;
   padding: 15px;
   border-radius: 12px;
@@ -345,7 +393,7 @@ body {
 }
 
 .form-right input:focus, .form-right textarea:focus, .form-right select:focus {
-  box-shadow: 0 0 0 2px #73b8fc; /* Легкое свечение при фокусе */
+  box-shadow: 0 0 0 2px #73b8fc;
 }
 
 .title-input {
@@ -373,68 +421,58 @@ body {
 .save-pin-btn:hover {
   background-color: #ad081b;
 }
-/* --- УВЕДОМЛЕНИЯ (TOAST) --- */
 
+/* --- УВЕДОМЛЕНИЯ (TOAST) --- */
 .toast {
-  position: fixed; /* Зафиксировано на экране */
-  bottom: 20px; /* Отступ от низа */
-  left: 50%; /* Выравнивание по центру по горизонтали */
-  transform: translateX(-50%); /* Сдвиг на половину ширины влево для точного центрирования */
-  
-  background-color: #e9e9e9; /* Светло-серый фон (как на скриншоте) */
-  color: #555; /* Темно-серый текст для контраста */
-  
-  padding: 12px 24px; /* Внутренние отступы */
-  border-radius: 16px; /* Сильно скругленные углы */
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  padding: 12px 24px;
+  border-radius: 16px;
   font-size: 14px;
   font-weight: bold;
-  
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Легкая тень */
-  z-index: 2000; /* Поверх всего */
-  
-  /* Анимация появления */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-color);
+  z-index: 2000;
   animation: slideInUp 0.3s ease-out;
 }
 
-/* Анимация: Всплытие снизу */
 @keyframes slideInUp {
-  from {
-    transform: translate(-50%, 100%);
-    opacity: 0;
-  }
-  to {
-    transform: translate(-50%, 0);
-    opacity: 1;
-  }
+  from { transform: translate(-50%, 100%); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
 }
-/* =========================================
-   ИСПРАВЛЕННАЯ СТРАНИЦА ДЕТАЛЕЙ (PIN DETAIL)
-   ========================================= */
 
+/* =========================================
+   СТРАНИЦА ДЕТАЛЕЙ (PIN DETAIL)
+   ========================================= */
 .pin-detail-page {
   margin-left: 80px;
   padding: 40px;
   display: flex;
   justify-content: center;
-  background-color: #fff;
+  background-color: var(--bg-color);
   min-height: 100vh;
 }
 
 .pin-detail-card {
   display: flex;
-  background-color: #ffffff;
+  background-color: var(--modal-bg);
+  color: var(--text-color);
   border-radius: 32px;
   width: 100%;
   max-width: 1016px;
   height: fit-content;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   overflow: hidden;
 }
 
 /* Левая часть - Главная картинка */
 .pin-detail-left {
   flex: 1.2;
-  padding: 20px; /* Отступ чтобы картинка не липла к краям */
+  padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -442,7 +480,7 @@ body {
 
 .main-pin-image {
   width: 100%;
-  border-radius: 24px; /* Твоё скругление */
+  border-radius: 24px;
   object-fit: cover;
   display: block;
 }
@@ -453,7 +491,7 @@ body {
   padding: 32px;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid #f0f0f0;
+  border-left: 1px solid var(--border-color);
 }
 
 .pin-detail-right-header {
@@ -467,8 +505,9 @@ body {
   background: none; border: none;
   font-size: 24px; cursor: pointer;
   padding: 8px; border-radius: 50%;
+  color: var(--text-color);
 }
-.back-arrow-btn:hover { background-color: #f0f0f0; }
+.back-arrow-btn:hover { background-color: var(--secondary-bg); }
 
 .pin-detail-title {
   font-size: 28px;
@@ -491,7 +530,7 @@ body {
 
 .related-mini-grid img {
   width: 100%;
-  aspect-ratio: 1; /* Делаем их квадратными как ты просил */
+  aspect-ratio: 1;
   object-fit: cover;
   border-radius: 12px;
   cursor: pointer;
@@ -503,15 +542,15 @@ body {
 /* Аватарки и комменты */
 .user-avatar-circle {
   width: 32px; height: 32px;
-  border-radius: 50%; background-color: #111;
+  border-radius: 50%; background-color: var(--text-color);
 }
-.grey-avatar { background-color: #e9e9e9; }
+.grey-avatar { background-color: var(--secondary-bg); }
 
 .comment-input-wrapper {
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: #f0f0f0;
+  background-color: var(--input-bg);
   padding: 12px 16px;
   border-radius: 30px;
   margin-top: 20px;
@@ -520,11 +559,145 @@ body {
 .comment-input-wrapper input {
   border: none; background: transparent;
   outline: none; flex: 1;
+  color: var(--text-color);
 }
 
-/* --- МОДАЛКА И ОСТАЛЬНОЕ --- */
-.modal-overlay {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex; justify-content: center; align-items: center; z-index: 1000;
+/* --- СКЕЛЕТОНЫ --- */
+.skeleton-card {
+  background: linear-gradient(
+    90deg, 
+    var(--skeleton-base) 25%, 
+    var(--skeleton-shine) 50%, 
+    var(--skeleton-base) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 16px;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+/* Стили для ссылки-профиля внутри меню */
+.dropdown-menu .profile-link {
+  display: block;
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.dropdown-menu .profile-link:hover {
+  background-color: var(--secondary-bg);
+}
+
+/* На всякий случай поправим кнопку выхода, чтобы она визуально отличалась */
+.dropdown-menu .logout-btn {
+  background: #e60023;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+/* =========================================
+   МОДАЛЬНОЕ ОКНО ЛОГИНА (Visual Discovery)
+   ========================================= */
+
+.login-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-modal-card {
+  background: var(--bg-color, #ffffff);
+  color: var(--text-color, #000000);
+  padding: 40px;
+  border-radius: 24px;
+  width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: center;
+  position: relative;
+}
+
+.login-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.2s;
+}
+
+.login-modal-close:hover {
+  color: #333;
+}
+
+.login-modal-icon {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.login-modal-title {
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.login-modal-desc {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 25px;
+  line-height: 1.4;
+}
+
+.login-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-modal-input {
+  padding: 14px;
+  border-radius: 12px;
+  border: 2px solid #ddd;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.login-modal-input:focus {
+  border-color: #e60023;
+}
+
+.login-modal-btn {
+  padding: 14px;
+  border-radius: 12px;
+  background: #e60023;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+
+.login-modal-btn:hover {
+  background: #ad081b;
 }

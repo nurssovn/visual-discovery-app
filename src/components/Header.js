@@ -1,7 +1,6 @@
 import React from 'react';
 import UserProfile from './UserProfile';
 
-// Принимаем searchTerm и функцию onSearchChange
 function Header({ searchTerm, onSearchChange }) {
   return (
     <header className="app-header">
@@ -11,8 +10,8 @@ function Header({ searchTerm, onSearchChange }) {
         <input 
           type="text" 
           placeholder="Поиск" 
-          value={searchTerm} // Привязываем значение инпута к стейту
-          onChange={onSearchChange} // Обновляем стейт при каждом нажатии клавиши
+          value={searchTerm} 
+          onChange={onSearchChange} 
         />
       </div>
 

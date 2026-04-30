@@ -1,18 +1,17 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom'; // Добавили для работы ссылок
 
-// 1. ВОЗВРАЩАЕМ ИМПОРТЫ ТВОИХ ИКОНОК ИЗ ПАПКИ ASSETS
-// (Убедись, что файлы с такими именами всё еще лежат в src/assets)
+// 1. ИМПОРТЫ ТВОИХ ИКОНОК
 import logoIcon from '../assets/logo.png';
 import homeIcon from '../assets/home.png';
-import addIcon from '../assets/add.png'; // Иконка плюсика
+import addIcon from '../assets/add.png';
 import messageIcon from '../assets/message.png';
 import bellIcon from '../assets/bell.png';
 import settingsIcon from '../assets/settings.png';
 
-// 2. ПРИНИМАЕМ ПРОПС onOpenForm (пульт управления формой из App.js)
-function Sidebar({ onOpenForm }) {
+// 2. ПРИНИМАЕМ ПРОПСЫ: onOpenForm, theme и toggleTheme (обязательно в скобках {})
+function Sidebar({ onOpenForm, theme, toggleTheme }) {
 
-  // Оставляем плавный скролл наверх по клику на лого (полезная фича для защиты)
   const handleLogoClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -20,27 +19,26 @@ function Sidebar({ onOpenForm }) {
   return (
     <aside className="sidebar">
       
-      {/* --- ВЕРХНЯЯ ЧАСТЬ --- */}
       <div className="sidebar-top">
-        
-        {/* 1. Логотип - используем твой logoIcon */}
-        <div className="logo-btn" onClick={handleLogoClick} title="На главную">
+        {/* Логотип */}
+        <NavLink to="/" className="logo-btn" onClick={handleLogoClick} title="На главную">
            <img src={logoIcon} alt="Logo" width="32" />
-        </div>
+        </NavLink>
         
-        {/* 2. Главная - используем твой homeIcon */}
-        <button className="icon-btn active" title="Главная">
+        {/* Главная */}
+        <NavLink to="/" className={({ isActive }) => isActive ? "icon-btn active" : "icon-btn"} title="Главная">
            <img src={homeIcon} alt="Home" width="24" />
-        </button>
+        </NavLink>
 
-        {/* 3. Создать - ТВОЯ ИКОНКА ПЛЮСИКА И НАШЕ НОВОЕ СОБЫТИЕ */}
+        {/* Создать пин (Кнопка) */}
         <button 
           className="icon-btn" 
           title="Создать пин" 
-          onClick={onOpenForm} // <-- Важно! Присоединяем функцию открытия формы к твоей иконке!
+          onClick={onOpenForm}
         >
            <img src={addIcon} alt="Создать" width="24" />
         </button>
+        
         <button className="icon-btn" title="Сообщения">
            <img src={messageIcon} alt="Messages" width="24" />
         </button>
@@ -48,16 +46,17 @@ function Sidebar({ onOpenForm }) {
         <button className="icon-btn" title="Уведомления">
            <img src={bellIcon} alt="Notifications" width="24" />
         </button>
-
       </div>
 
-      {/* --- НИЖНЯЯ ЧАСТЬ --- */}
       <div className="sidebar-bottom">
+        {/* КНОПКА ПЕРЕКЛЮЧЕНИЯ ТЕМЫ (Исправлено) */}
+        <button className="icon-btn" onClick={toggleTheme} title="Сменить тему">
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
 
         <button className="icon-btn" title="Настройки">
            <img src={settingsIcon} alt="Settings" width="24" />
         </button>
-
       </div>
       
     </aside>

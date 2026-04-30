@@ -1,7 +1,7 @@
 import React from 'react';
 
 function SearchBar() {
-  // Событие 2: Отслеживание ввода текста
+  
   const handleSearch = (event) => {
     console.log('Поиск:', event.target.value);
   };

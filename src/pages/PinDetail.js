@@ -1,42 +1,58 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../context/AppContext'; 
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
-function PinDetail({ pins, onToggleSave }) {
+function PinDetail() {
+  // 1. ДОСТАЛИ И user ИЗ КОНТЕКСТА
+  const { pins, handleToggleSave: onToggleSave, user } = useContext(AppContext);
+  
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // Защита: пока пины грузятся с сервера
+  if (!pins || pins.length === 0) {
+    return <div style={{ textAlign: 'center', padding: '50px' }}>Загрузка...</div>;
+  }
   
-  const pin = pins.find((p) => p.id === parseInt(id));
+  // Ищем пин
+  const pin = pins.find((p) => String(p.id) === String(id));
 
-  // ФИЛЬТР: Берем только те, у которых такая же категория, и исключаем текущую картинку
+  // Если пин не найден
+  if (!pin) {
+    return <div style={{ textAlign: 'center', padding: '50px' }}>Пин не найден :(</div>;
+  }
+
   const relatedBySearch = pins.filter(p => 
-    p.category === pin?.category && 
-    p.id !== pin?.id && 
+    p.category === pin.category && 
+    String(p.id) !== String(pin.id) && 
     p.image !== ""
-  ).slice(0, 6); // Возьмем первые 6 похожих
+  ).slice(0, 6); 
 
-  if (!pin) return <div className="pin-detail-page">Загрузка...</div>;
+  // 2. ВЫЧИСЛЯЕМ СТАТУС СОХРАНЕНИЯ ДЛЯ ЭТОГО ЮЗЕРА
+  const isSavedByMe = pin.savedBy && user && pin.savedBy.includes(user.username);
 
   return (
     <div className="pin-detail-page" style={{ marginLeft: '80px', padding: '40px', display: 'flex', justifyContent: 'center' }}>
       
       <div className="pin-detail-card">
         
-        {/* ЛЕВАЯ ЧАСТЬ - ГЛАВНОЕ ФОТО (со скруглением) */}
+        {/* ЛЕВАЯ ЧАСТЬ - ГЛАВНОЕ ФОТО */}
         <div className="pin-detail-left" style={{ flex: 1.2 }}>
           <img src={pin.image} alt={pin.title} className="main-pin-image" />
         </div>
 
-        {/* ПРАВАЯ ЧАСТЬ - ИНФО И ПОХОЖИЕ КАТЕГОРИИ */}
+        {/* ПРАВАЯ ЧАСТЬ - ИНФО */}
         <div className="pin-detail-right" style={{ flex: 1, padding: '30px', display: 'flex', flexDirection: 'column' }}>
           
           <div className="pin-detail-right-header">
             <button className="back-arrow-btn" onClick={() => navigate(-1)}>←</button>
+            {/* 3. МЕНЯЕМ ЛОГИКУ КНОПКИ (isSavedByMe вместо pin.saved) */}
             <button 
-              className={`save-btn ${pin.saved ? 'saved' : ''}`}
+              className={`save-btn ${isSavedByMe ? 'saved' : ''}`}
               style={{ position: 'static', opacity: 1 }}
               onClick={() => onToggleSave(pin.id)}
             >
-              {pin.saved ? 'Сохранено' : 'Сохранить'}
+              {isSavedByMe ? 'Сохранено' : 'Сохранить'}
             </button>
           </div>
 
@@ -52,7 +68,7 @@ function PinDetail({ pins, onToggleSave }) {
              </div>
           </div>
 
-          {/* ПОХОЖИЕ КАРТИНКИ (ТОЛЬКО ЭТА КАТЕГОРИЯ) */}
+          {/* ПОХОЖИЕ КАРТИНКИ */}
           <div className="related-section">
             <p style={{ fontWeight: 'bold', marginBottom: '10px' }}>Похожее из {pin.category}</p>
             <div className="related-mini-grid">

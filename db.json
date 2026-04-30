@@ -1,0 +1,150 @@
+{
+  "pins": [
+    {
+      "id": "9",
+      "image": "https://i.pinimg.com/736x/34/69/77/346977eaa36683afe66ef3fcf96d3e2b.jpg",
+      "title": "Modest Outfit",
+      "category": "outfit",
+      "saved": true,
+      "savedBy": [
+        "@lunacy"
+      ]
+    },
+    {
+      "id": "17",
+      "image": "https://i.pinimg.com/736x/e3/41/fc/e341fc979ba0c6545c1582b0c2223eee.jpg",
+      "title": "Cozy Bedroom",
+      "category": "home",
+      "saved": true,
+      "savedBy": [
+        "@lunacy"
+      ]
+    },
+    {
+      "id": "33",
+      "image": "https://i.pinimg.com/1200x/1d/3a/9b/1d3a9b1a69cc6965b9480fb82a3d284e.jpg",
+      "title": "Interior Wall",
+      "category": "wall",
+      "saved": false
+    },
+    {
+      "id": "41",
+      "image": "https://i.pinimg.com/736x/bb/e4/a4/bbe4a49014927cf85bd8236289fa8c19.jpg",
+      "title": "Classic Porsche",
+      "category": "car",
+      "saved": true,
+      "savedBy": [
+        "@nurssxe"
+      ]
+    },
+    {
+      "id": "49",
+      "image": "https://i.pinimg.com/736x/3d/ba/5e/3dba5ed2c9404b548ff911d9b6aa5ee5.jpg",
+      "title": "Aesthetic Pasta",
+      "category": "food",
+      "saved": false
+    },
+    {
+      "id": "9MhCGU6C3nE",
+      "image": "https://i.pinimg.com/736x/87/11/09/8711094ed2985c489604746d6f36ceac.jpg",
+      "title": "design apple",
+      "category": "aesthetic",
+      "saved": true,
+      "savedBy": [
+        "@nurssxe"
+      ]
+    },
+    {
+      "id": "656aSovXG84",
+      "image": "https://i.pinimg.com/736x/31/5f/7a/315f7a8115c60f26361c4adf6349098e.jpg",
+      "title": "a",
+      "category": "aesthetic",
+      "savedBy": []
+    },
+    {
+      "id": "YC0EqRgIEyw",
+      "image": "https://i.pinimg.com/736x/72/40/75/724075399d7b20fb420b19baffe0ea0b.jpg",
+      "title": "hell",
+      "category": "art",
+      "savedBy": []
+    },
+    {
+      "id": "Ti0gYE5SXqI",
+      "image": "https://i.pinimg.com/736x/b4/09/81/b409814a9b70f5fd08c532c120406942.jpg",
+      "title": "е",
+      "category": "art",
+      "savedBy": []
+    },
+    {
+      "id": "4l6j6DehmEM",
+      "image": "https://i.pinimg.com/736x/79/d0/90/79d090a8316cf5dc4b270d6858bfe045.jpg",
+      "title": "sherry",
+      "category": "outfit",
+      "savedBy": []
+    },
+    {
+      "id": "BU3Z1bO6ryw",
+      "image": "https://i.pinimg.com/736x/56/7d/b2/567db2607d78cafab74806ae6a2429b9.jpg",
+      "title": "Jorge",
+      "category": "outfit",
+      "savedBy": []
+    },
+    {
+      "id": "P4LxFWBeTxc",
+      "image": "https://i.pinimg.com/736x/b3/80/21/b38021fa6c8ae2b7c202e6226fe1b2d0.jpg",
+      "title": "sss",
+      "category": "aesthetic",
+      "savedBy": []
+    },
+    {
+      "id": "R6sdKmHo1Go",
+      "image": "https://i.pinimg.com/736x/98/84/d2/9884d223d80e9315cb67aeda5f9b075d.jpg",
+      "title": "cigarette",
+      "category": "aesthetic",
+      "savedBy": []
+    },
+    {
+      "id": "RoiY0Qqkqto",
+      "image": "https://i.pinimg.com/736x/85/c0/c2/85c0c2dabeb92cee3c165f79b2330dee.jpg",
+      "title": "🥩 EL LOCO Paris | Steak, Wine & Cozy Dinner Vibes 🍷✨",
+      "category": "food",
+      "savedBy": []
+    },
+    {
+      "id": "lK3ibrp8Q_I",
+      "image": "https://i.pinimg.com/736x/74/40/0a/74400a5a3116c1814cb5c3075f53e6df.jpg",
+      "title": "222",
+      "category": "food",
+      "savedBy": []
+    },
+    {
+      "id": "qOX5mqnx9n4",
+      "image": "https://i.pinimg.com/736x/78/36/12/783612c230f21bd52a2a459bde3ee822.jpg",
+      "title": "Morning parfait",
+      "category": "food",
+      "savedBy": []
+    },
+    {
+      "id": "vLMU3Y15FXA",
+      "image": "https://i.pinimg.com/736x/db/7f/f3/db7ff345930df88c2913a9941a9ca9d5.jpg",
+      "title": "dream home",
+      "category": "home",
+      "savedBy": []
+    },
+    {
+      "id": "JiuSvbjKqr4",
+      "image": "https://i.pinimg.com/1200x/78/e7/e3/78e7e3f665128183ee12fbe25ac9c0d4.jpg",
+      "title": "jenun",
+      "category": "home",
+      "savedBy": []
+    },
+    {
+      "id": "SIPQPUdCh-Q",
+      "image": "https://i.pinimg.com/736x/94/b0/4c/94b04c4fb904efc673734d7ac74db9d8.jpg",
+      "title": "desk setup ",
+      "category": "home",
+      "savedBy": []
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
