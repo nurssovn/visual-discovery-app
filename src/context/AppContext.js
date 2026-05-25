@@ -1,108 +1,164 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth'; // <-- 1. ИМПОРТИРУЕМ НАШ ХУК
+import React, { createContext, useState, useEffect, useCallback, useRef, useContext } from 'react';
+import { apiService } from '../services/api';
+import { AuthContext } from './AuthContext';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  const { user, openLogin } = useContext(AuthContext);
+
   const [pins, setPins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
-  const [isLoginOpen, setIsLoginOpen] = useState(false); 
+  const [theme, setTheme] = useLocalStorage('theme', 'light');
+  const [toastMessage, setToastMessage] = useState('');
+  const toastTimerRef = useRef(null);
 
-  // <-- 2. ИСПОЛЬЗУЕМ КАСТОМНЫЙ ХУК ВМЕСТО СТАРОГО СТЕЙТА! -->
-  const { user, login, register, logout } = useAuth(); 
+  const showToast = useCallback((message) => {
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+    }
+    setToastMessage(message);
+    toastTimerRef.current = setTimeout(() => {
+      setToastMessage('');
+      toastTimerRef.current = null;
+    }, 3000);
+  }, []);
 
-  const openLogin = () => setIsLoginOpen(true);
-  const closeLogin = () => setIsLoginOpen(false);
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) {
+        clearTimeout(toastTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
 
-  useEffect(() => {
-    const fetchPins = async () => {
-      try {
-        const response = await fetch('http://localhost:5001/pins');
-        if (!response.ok) throw new Error('Не удалось загрузить пины');
-        const data = await response.json();
-        setPins(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    setTimeout(fetchPins, 800); 
+  const fetchPins = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await apiService.getPins();
+      setPins([...data].reverse());
+    } catch (err) {
+      setError('Не удалось загрузить пины. Запустите json-server: npm run server');
+      setPins([]);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  const handleAddPin = async (newPin) => {
-    const pinToAdd = { ...newPin, savedBy: [], id: String(Date.now()) };
-    try {
-      const response = await fetch('http://localhost:5001/pins', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pinToAdd)
-      });
-      const savedPin = await response.json();
-      setPins([savedPin, ...pins]);
-    } catch (err) {
-      console.error('Ошибка при добавлении:', err);
-    }
-  };
+  useEffect(() => {
+    fetchPins();
+  }, [fetchPins]);
 
-  const handleDeletePin = async (idToRemove) => {
-    try {
-      await fetch(`http://localhost:5001/pins/${idToRemove}`, { method: 'DELETE' });
-      setPins(pins.filter((pin) => pin.id !== idToRemove));
-    } catch (err) {
-      console.error('Ошибка при удалении:', err);
-    }
-  };
+  const handleAddPin = useCallback(
+    async (newPin) => {
+      if (!user) {
+        openLogin();
+        return false;
+      }
 
-  const handleToggleSave = async (idToToggle) => {
-    if (!user) {
-      openLogin(); 
-      return; 
-    }
+      const { id: _id, ...pinData } = newPin;
+      const pinToAdd = {
+        ...pinData,
+        savedBy: [],
+        description: pinData.description || '',
+        authorId: user.username,
+      };
 
-    const pinToUpdate = pins.find(pin => String(pin.id) === String(idToToggle));
-    
-    // Защита от старых пинов: если массива savedBy еще нет, создаем его
-    const currentSavedBy = pinToUpdate.savedBy || []; 
-    
-    // Проверяем, сохранял ли уже ЭТОТ юзер этот пин?
-    const hasSaved = currentSavedBy.includes(user.username);
+      try {
+        const savedPin = await apiService.createPin(pinToAdd);
+        setPins((prev) => [savedPin, ...prev]);
+        showToast('Пин успешно создан');
+        return true;
+      } catch {
+        showToast('Не удалось создать пин');
+        return false;
+      }
+    },
+    [showToast, user, openLogin]
+  );
 
-    // Если сохранял - удаляем его из массива. Если нет - добавляем!
-    const newSavedBy = hasSaved 
-      ? currentSavedBy.filter(username => username !== user.username) 
-      : [...currentSavedBy, user.username];
+  const handleDeletePin = useCallback(
+    async (idToDelete) => {
+      const pin = pins.find((p) => String(p.id) === String(idToDelete));
+      if (pin?.authorId && user?.username && pin.authorId !== user.username) {
+        showToast('Можно удалять только свои пины');
+        return false;
+      }
 
-    const updatedPin = { ...pinToUpdate, savedBy: newSavedBy };
-    
-    try {
-      await fetch(`http://localhost:5001/pins/${idToToggle}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedPin)
-      });
-      setPins(pins.map((pin) => String(pin.id) === String(idToToggle) ? updatedPin : pin));
-    } catch (err) {
-      console.error('Ошибка при сохранении:', err);
-    }
-  };
+      try {
+        await apiService.deletePin(idToDelete);
+        setPins((prev) => prev.filter((pin) => String(pin.id) !== String(idToDelete)));
+        showToast('Пин успешно удалён');
+        return true;
+      } catch {
+        showToast('Не удалось удалить пин');
+        return false;
+      }
+    },
+    [showToast, pins, user]
+  );
+
+  const handleToggleSave = useCallback(
+    async (idToToggle) => {
+      if (!user) {
+        openLogin();
+        return false;
+      }
+
+      const pinToUpdate = pins.find((pin) => String(pin.id) === String(idToToggle));
+      if (!pinToUpdate) {
+        showToast('Пин не найден');
+        return false;
+      }
+
+      const currentSavedBy = pinToUpdate.savedBy || [];
+      const hasSaved = currentSavedBy.includes(user.username);
+      const newSavedBy = hasSaved
+        ? currentSavedBy.filter((username) => username !== user.username)
+        : [...currentSavedBy, user.username];
+
+      const updatedPin = { ...pinToUpdate, savedBy: newSavedBy };
+
+      try {
+        await apiService.updatePin(idToToggle, updatedPin);
+        setPins((prev) =>
+          prev.map((pin) => (String(pin.id) === String(idToToggle) ? updatedPin : pin))
+        );
+        showToast(hasSaved ? 'Убрано из сохранённых' : 'Добавлено в сохранённые');
+        return true;
+      } catch {
+        showToast('Не удалось обновить пин');
+        return false;
+      }
+    },
+    [user, pins, openLogin, showToast]
+  );
 
   return (
-    <AppContext.Provider value={{
-      pins, isLoading, error, theme, user, 
-      isLoginOpen, openLogin, closeLogin, 
-      toggleTheme, handleAddPin, handleDeletePin, handleToggleSave, 
-      login, register, logout // <-- Добавили register
-    }}>
+    <AppContext.Provider
+      value={{
+        pins,
+        isLoading,
+        error,
+        theme,
+        toggleTheme,
+        fetchPins,
+        handleAddPin,
+        handleDeletePin,
+        handleToggleSave,
+        showToast,
+        toastMessage,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

@@ -1,28 +1,18 @@
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
-import Toast from './Toast';
+import ConfirmDialog from './ConfirmDialog';
+import deleteIconPng from '../assets/delete-icon.png';
 
-function PinCard({ id, image, saved, onDelete, onToggleSave }) {
-  const [toastMessage, setToastMessage] = useState('');
-  const [isToastVisible, setIsToastVisible] = useState(false);
+function PinCard({ id, image, saved, canDelete = true, onDelete, onToggleSave }) {
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const showToast = (message) => {
-    setToastMessage(message);
-    setIsToastVisible(true);
-    
-    setTimeout(() => {
-      setIsToastVisible(false);
-      setTimeout(() => setToastMessage(''), 300);
-    }, 3000);
+  const handleSaveClick = async () => {
+    await onToggleSave(id);
   };
 
-  const handleSaveClick = () => {
-    onToggleSave(id);
-    if (saved) {
-      showToast('Пин удален из сохраненного!');
-    } else {
-      showToast('Пин сохранен!');
-    }
+  const handleConfirmDelete = async () => {
+    setShowConfirm(false);
+    await onDelete(id);
   };
 
   return (
@@ -31,18 +21,33 @@ function PinCard({ id, image, saved, onDelete, onToggleSave }) {
         <img src={image} alt="Pin" />
       </Link>
 
-      <button 
-        className={`save-btn ${saved ? 'saved' : ''}`} 
+      <button
+        type="button"
+        className={`save-btn ${saved ? 'saved' : ''}`}
         onClick={handleSaveClick}
       >
         {saved ? 'Сохранено' : 'Сохранить'}
       </button>
 
-      <button className="delete-btn" onClick={() => onDelete(id)}>
-        🗑️
-      </button>
-      
-      {isToastVisible && <Toast message={toastMessage} />}
+      {canDelete && (
+        <button
+          type="button"
+          className="delete-btn"
+          onClick={() => setShowConfirm(true)}
+          title="Удалить пин"
+        >
+          <img src={deleteIconPng} alt="Удалить" width="18" style={{ display: 'block' }} />
+        </button>
+      )}
+
+      {showConfirm && (
+        <ConfirmDialog
+          title="Удалить пин?"
+          message="Это действие нельзя отменить. Пин будет удалён для всех пользователей."
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
     </div>
   );
 }

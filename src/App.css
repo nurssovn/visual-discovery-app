@@ -2,31 +2,63 @@
 :root {
   --bg-color: #ffffff;
   --text-color: #111111;
+  --text-muted: #767676;
+  --text-subtle: #666666;
   --sidebar-bg: #ffffff;
   --header-bg: rgba(255, 255, 255, 0.75);
   --card-bg: #ffffff;
   --input-bg: #e9e9e9;
+  --input-border: #dddddd;
   --secondary-bg: #f0f0f0;
+  --surface-hover: #f5f5f5;
   --modal-bg: #ffffff;
   --modal-overlay: rgba(0, 0, 0, 0.6);
+  --dropdown-bg: rgba(255, 255, 255, 0.95);
+  --edit-sidebar-bg: #fafafa;
   --skeleton-base: #f0f0f0;
   --skeleton-shine: #f8f8f8;
   --border-color: rgba(0, 0, 0, 0.05);
+  --accent: #172439;
+  --accent-hover: #161b33;
+  --focus-ring: #73b8fc;
+  --error-color: #e53935;
+  --save-btn-bg: #253e45;
+  --save-btn-hover: #1b272b;
+  --btn-overlay-bg: rgba(255, 255, 255, 0.9);
+  --btn-overlay-hover: #ffffff;
+  --profile-glow: rgba(230, 0, 35, 0.04);
+  --divider-fade: rgba(0, 0, 0, 0.05);
 }
 
 [data-theme='dark'] {
   --bg-color: #111111;
   --text-color: #f5f5f5;
+  --text-muted: #a0a0a0;
+  --text-subtle: #888888;
   --sidebar-bg: #1a1a1a;
   --header-bg: rgba(17, 17, 17, 0.75);
   --card-bg: #262626;
   --input-bg: #333333;
+  --input-border: rgba(255, 255, 255, 0.15);
   --secondary-bg: #2b2b2b;
+  --surface-hover: #333333;
   --modal-bg: #262626;
   --modal-overlay: rgba(0, 0, 0, 0.85);
+  --dropdown-bg: rgba(38, 38, 38, 0.95);
+  --edit-sidebar-bg: #1e1e1e;
   --skeleton-base: #262626;
   --skeleton-shine: #333333;
   --border-color: rgba(255, 255, 255, 0.1);
+  --accent: #8fa4c4;
+  --accent-hover: #a8b8d4;
+  --focus-ring: #4a90d9;
+  --error-color: #ff6b6b;
+  --save-btn-bg: #3d5a62;
+  --save-btn-hover: #4a6d77;
+  --btn-overlay-bg: rgba(0, 0, 0, 0.75);
+  --btn-overlay-hover: rgba(0, 0, 0, 0.9);
+  --profile-glow: rgba(230, 0, 35, 0.08);
+  --divider-fade: rgba(255, 255, 255, 0.08);
 }
 
 html {
@@ -96,8 +128,12 @@ body {
   color: var(--text-color);
 }
 
-.icon-btn:hover { 
-  background-color: var(--secondary-bg); 
+.icon-btn:hover {
+  background-color: var(--secondary-bg);
+}
+
+.icon-btn.active {
+  background-color: var(--secondary-bg);
 }
 
 /* --- ПРАВАЯ ЧАСТЬ (HOME) --- */
@@ -151,6 +187,10 @@ body {
   position: relative;
 }
 
+.avatar {
+  cursor: pointer;
+}
+
 .avatar img {
   width: 40px;
   height: 40px;
@@ -172,9 +212,10 @@ body {
   color: var(--text-color);
 }
 
-.dropdown-menu button {
-  background: #e60023;
-  color: white;
+.dropdown-menu button,
+.dropdown-menu .logout-btn {
+  background: var(--text-color);
+  color: var(--bg-color);
   border: none;
   padding: 10px;
   width: 100%;
@@ -182,6 +223,42 @@ body {
   font-weight: bold;
   cursor: pointer;
   margin-top: 10px;
+  transition: opacity 0.2s;
+}
+
+.dropdown-menu .logout-btn:hover {
+  opacity: 0.8;
+}
+
+.dropdown-menu hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 5px 0;
+}
+
+.dropdown-menu .dropdown-user-name {
+  padding: 10px;
+  font-weight: bold;
+}
+
+.dropdown-menu .dropdown-user-handle {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.login-nav-btn {
+  padding: 10px 18px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.login-nav-btn:hover {
+  background: var(--accent-hover);
 }
 
 /* --- КАТЕГОРИИ (CATEGORY NAV) --- */
@@ -228,7 +305,6 @@ body {
   overflow: hidden;
   cursor: zoom-in;
   background-color: var(--card-bg);
-  /* Удалены глючные transition и transform */
 }
 
 .pin-card img {
@@ -242,7 +318,7 @@ body {
   position: absolute;
   top: 15px;
   right: 15px;
-  background-color: #e60023;
+  background-color: var(--save-btn-bg);
   color: white;
   border: none;
   padding: 10px 15px;
@@ -254,41 +330,54 @@ body {
 }
 
 .save-btn:hover {
-  background-color: #ad081b;
+  background-color: var(--save-btn-hover);
 }
 
 .save-btn.saved {
-  background-color: var(--text-color); /* Черный цвет в светлой, белый в темной */
-  color: var(--bg-color); /* Белый текст в светлой, черный в темной */
-  opacity: 1;
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
 }
 
-/* Кнопка "Удалить" */
 .delete-btn {
   position: absolute;
   bottom: 15px;
   right: 15px;
-  background-color: transparent;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--btn-overlay-bg);
   border: none;
-  font-size: 24px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0; 
-  transition: opacity 0.2s, transform 0.2s;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
-  color: white; /* Всегда белая с тенью для видимости поверх фото */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
+/* Картинка внутри кнопки */
+.delete-btn img {
+  width: 18px;          /* Аккуратный размер самой иконки */
+  height: 18px;
+  object-fit: contain;  /* Чтобы картинка не искажалась */
+  display: block;
+}
+
+/* Эффект при наведении на кнопку */
 .delete-btn:hover {
-  transform: scale(1.2); 
+  transform: scale(1.2);
+  background-color: var(--btn-overlay-hover);
 }
 
-/* Показываем кнопки только при наведении мышки на карточку */
 .pin-card:hover .save-btn,
 .pin-card:hover .delete-btn {
-  opacity: 1; 
+  opacity: 1;
+  visibility: visible;
 }
 
 /* --- МОДАЛЬНОЕ ОКНО ДЛЯ ФОРМЫ (ADD PIN) --- */
@@ -345,7 +434,7 @@ body {
 
 .empty-preview {
   text-align: center;
-  color: #555;
+  color: var(--text-muted);
   padding: 20px;
 }
 
@@ -392,8 +481,13 @@ body {
   outline: none;
 }
 
+.form-right select option {
+  background-color: var(--modal-bg);
+  color: var(--text-color);
+}
+
 .form-right input:focus, .form-right textarea:focus, .form-right select:focus {
-  box-shadow: 0 0 0 2px #73b8fc;
+  box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
 .title-input {
@@ -407,7 +501,7 @@ body {
 }
 
 .save-pin-btn {
-  background-color: #e60023;
+  background-color: var(--accent);
   color: white;
   border: none;
   padding: 15px;
@@ -416,10 +510,11 @@ body {
   font-weight: bold;
   cursor: pointer;
   margin-top: auto;
+  transition: background 0.2s;
 }
 
 .save-pin-btn:hover {
-  background-color: #ad081b;
+  background-color: var(--accent-hover);
 }
 
 /* --- УВЕДОМЛЕНИЯ (TOAST) --- */
@@ -515,6 +610,47 @@ body {
   margin: 0 0 10px 0;
 }
 
+.pin-detail-category {
+  color: var(--text-muted);
+  margin: 0 0 10px 0;
+}
+
+.comments-section {
+  flex: 1;
+}
+
+.comment-text {
+  font-size: 13px;
+}
+
+.related-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.save-btn--static {
+  position: static !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.edit-form-input--full {
+  width: 100%;
+}
+
+.edit-form-input--textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: none;
+}
+
+.form-error {
+  color: var(--error-color);
+  font-size: 14px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
 /* Сетка похожих картинок справа */
 .related-section {
   margin-top: 30px;
@@ -595,28 +731,14 @@ body {
 }
 
 /* На всякий случай поправим кнопку выхода, чтобы она визуально отличалась */
-.dropdown-menu .logout-btn {
-  background: #e60023;
-  color: white;
-  border: none;
-  padding: 10px;
-  width: 100%;
-  border-radius: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-}
-/* =========================================
-   МОДАЛЬНОЕ ОКНО ЛОГИНА (Visual Discovery)
-   ========================================= */
-
+/* Модальное окно логина */
 .login-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: var(--modal-overlay);
   z-index: 9999;
   display: flex;
   justify-content: center;
@@ -624,14 +746,15 @@ body {
 }
 
 .login-modal-card {
-  background: var(--bg-color, #ffffff);
-  color: var(--text-color, #000000);
+  background: var(--modal-bg);
+  color: var(--text-color);
   padding: 40px;
   border-radius: 24px;
   width: 400px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   text-align: center;
   position: relative;
+  border: 1px solid var(--border-color);
 }
 
 .login-modal-close {
@@ -642,12 +765,12 @@ body {
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: #999;
+  color: var(--text-muted);
   transition: color 0.2s;
 }
 
 .login-modal-close:hover {
-  color: #333;
+  color: var(--text-color);
 }
 
 .login-modal-icon {
@@ -661,10 +784,17 @@ body {
 }
 
 .login-modal-desc {
-  color: #666;
+  color: var(--text-subtle);
   font-size: 14px;
   margin-bottom: 25px;
   line-height: 1.4;
+}
+
+.login-modal-error {
+  color: var(--error-color);
+  font-size: 14px;
+  margin-bottom: 15px;
+  font-weight: bold;
 }
 
 .login-modal-form {
@@ -676,20 +806,22 @@ body {
 .login-modal-input {
   padding: 14px;
   border-radius: 12px;
-  border: 2px solid #ddd;
+  border: 2px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-color);
   font-size: 16px;
   outline: none;
   transition: border-color 0.2s;
 }
 
 .login-modal-input:focus {
-  border-color: #e60023;
+  border-color: var(--accent);
 }
 
 .login-modal-btn {
   padding: 14px;
   border-radius: 12px;
-  background: #e60023;
+  background: var(--accent);
   color: white;
   border: none;
   cursor: pointer;
@@ -699,5 +831,616 @@ body {
 }
 
 .login-modal-btn:hover {
-  background: #ad081b;
+  background: var(--accent-hover);
+}
+
+.login-modal-switch {
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--text-subtle);
+}
+
+.login-modal-switch-link {
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: underline;
+}
+/* =========================================
+   ПРОФИЛЬ: ОСНОВНОЙ ДИЗАЙН (КАК В COSMOS)
+   ========================================= */
+
+.profile-page-container {
+  margin-left: 80px;
+  padding: 50px 60px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: calc(100vw - 80px);
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.profile-bg-glow-1 {
+  position: absolute;
+  top: -150px;
+  right: -100px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--profile-glow) 0%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Верхний блок (Шапка профиля) */
+.profile-top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 30px;
+  z-index: 1;
+}
+.profile-info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 400px;
+}
+
+.profile-user-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-avatar-large {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-name-block h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.profile-handle {
+  color: var(--text-muted);
+  font-size: 15px;
+  margin: 0;
+}
+
+.profile-bio {
+  font-size: 15px;
+  line-height: 1.5;
+  margin-top: 5px;
+  white-space: pre-line;
+}
+
+.profile-content-center {
+  z-index: 1;
+  width: 100%;
+}
+
+.profile-guest-message {
+  margin-left: 100px;
+}
+
+.profile-buttons-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn-profile-action {
+  padding: 10px 20px;
+  border-radius: 24px;
+  border: 1px solid var(--input-border);
+  background: transparent;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-profile-action:hover {
+  background-color: var(--surface-hover);
+  border-color: var(--border-color);
+}
+
+/* Правая часть (Статистика и Фильтр) */
+.profile-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.profile-stats-right {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-number {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.stat-label {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+.filter-dropdown-wrapper {
+  position: relative;
+}
+
+.btn-filter-icon {
+  background: var(--text-color);
+  color: var(--bg-color);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-filter-icon:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.filter-dropdown-menu {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: var(--dropdown-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 15px;
+  width: 180px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.filter-dropdown-menu.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.filter-category-link {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.filter-category-link:hover {
+  background: var(--secondary-bg);
+  color: var(--text-color);
+}
+
+.filter-category-link.active {
+  background: var(--text-color);
+  color: var(--bg-color);
+  font-weight: 600;
+}
+
+.profile-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--divider-fade), transparent);
+  margin: 10px 0 40px 0;
+  z-index: 1;
+}
+
+/* =========================================
+   ИСПРАВЛЕННОЕ СОСТОЯНИЕ "ПУСТО"
+   ========================================= */
+.profile-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  margin-top: 60px;
+}
+
+.profile-empty-state .empty-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.profile-empty-state h3 {
+  color: var(--text-color);
+  margin: 0 0 10px 0;
+  font-size: 22px;
+}
+
+.profile-empty-state p {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 15px;
+}
+
+.edit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--modal-overlay);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-modal-container {
+  background-color: var(--modal-bg);
+  color: var(--text-color);
+  width: 900px;
+  max-width: 95vw;
+  height: 600px;
+  max-height: 90vh;
+  border-radius: 20px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  position: relative;
+  border: 1px solid var(--border-color);
+}
+
+.btn-close-modal {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+  transition: opacity 0.2s;
+}
+
+.btn-close-modal:hover {
+  opacity: 0.5;
+}
+
+.edit-modal-sidebar {
+  width: 280px;
+  background-color: var(--edit-sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  padding: 70px 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  color: var(--text-muted);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.edit-sidebar-item.active {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+}
+
+.edit-sidebar-item:hover:not(.active) {
+  background-color: var(--secondary-bg);
+  color: var(--text-color);
+}
+
+.edit-modal-content {
+  flex: 1;
+  padding: 40px 60px;
+  background-color: var(--modal-bg);
+  overflow-y: auto;
+  color: var(--text-color);
+}
+
+.edit-modal-content h2 {
+  font-size: 20px;
+  margin-top: 0;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.edit-form-group {
+  margin-bottom: 25px;
+}
+
+.edit-form-group label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.edit-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.edit-form-input {
+  flex: 1;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-color);
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.edit-form-input:focus {
+  border-color: var(--text-color);
+}
+
+.edit-avatar-preview {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+}
+
+.edit-save-btn {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.edit-save-btn:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+
+/* 404 Page */
+.not-found-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 40px;
+}
+
+.not-found-page h1 {
+  font-size: 96px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.not-found-page h2 {
+  margin: 16px 0 8px;
+}
+
+.not-found-page p {
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.not-found-link {
+  padding: 12px 24px;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 24px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.not-found-link:hover {
+  background: var(--accent-hover);
+}
+
+.profile-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 0 40px 20px;
+  z-index: 1;
+  position: relative;
+}
+
+.profile-tab {
+  padding: 10px 20px;
+  border-radius: 24px;
+  text-decoration: none;
+  color: var(--text-subtle);
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+}
+
+.profile-tab:hover {
+  background: var(--secondary-bg);
+}
+
+.profile-tab.active {
+  background: var(--accent);
+  color: white;
+}
+
+.page-status {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.page-status--error {
+  color: var(--error-color);
+}
+
+.empty-message {
+  text-align: center;
+  width: 100%;
+  grid-column: 1 / -1;
+  color: var(--text-muted);
+}
+
+.page-message {
+  text-align: center;
+  padding: 50px;
+}
+
+/* Confirm dialog */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--modal-overlay);
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.confirm-card {
+  background: var(--modal-bg);
+  color: var(--text-color);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 400px;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.confirm-card h3 {
+  margin: 0 0 12px;
+}
+
+.confirm-card p {
+  color: var(--text-muted);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.confirm-danger-btn {
+  padding: 10px 20px;
+  border-radius: 24px;
+  border: none;
+  background: var(--error-color);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm-danger-btn:hover {
+  opacity: 0.9;
+}
+
+.edit-modal-content--full {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 60px 40px 40px;
+}
+
+.pin-detail-description {
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.feature-soon-hint {
+  margin-top: auto;
+  padding-top: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.profile-saved-grid {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.save-pin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.page-status .login-nav-btn {
+  margin-top: 16px;
+}
+
+.error-boundary {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.error-boundary h1 {
+  margin-bottom: 12px;
+}
+
+.error-boundary p {
+  color: var(--text-muted);
+  max-width: 400px;
+  margin-bottom: 24px;
 }

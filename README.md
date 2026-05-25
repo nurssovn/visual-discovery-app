@@ -1,92 +1,119 @@
-# Getting Started with Create React App
+# Visual Discovery App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Веб-приложение для поиска, категоризации и сохранения визуального контента (аналог moodboard / Pinterest).
 
-## Available Scripts
+## Tech Stack
 
-In the project directory, you can run:
+- React 19 + React Router v7
+- Context API (`AuthContext`, `AppContext`)
+- Custom hooks: `useAuth`, `useLocalStorage`
+- json-server (mock REST API)
+- Jest + React Testing Library
+- CSS variables (light / dark theme)
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Masonry-лента пинов с поиском и фильтрацией (`useMemo` + `filterPins` util)
+- CRUD через REST API (GET, POST, PUT, DELETE)
+- Auth: регистрация, вход, выход (`localStorage`)
+- Protected routes + nested profile routes:
+  - `/profile/saved` — сохранённые пины
+  - `/profile/created` — пины, созданные пользователем
+- `authorId` — удалять можно только свои пины
+- Error Boundary, lazy-loaded pages (`React.lazy`)
+- Глобальный toast, confirm перед удалением
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Setup
 
-### `npm test`
+```bash
+npm install
+cp .env.example .env
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Терминал 1 — API:**
 
-### `npm run build`
+```bash
+npm run server
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Терминал 2 — приложение:**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Откройте [http://localhost:3000](http://localhost:3000).
 
-### `npm run eject`
+## Environment
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `REACT_APP_API_URL` | `http://localhost:5001` | URL json-server |
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Scripts
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+| Command | Description |
+|---------|-------------|
+| `npm start` | Dev server |
+| `npm run server` | json-server :5001 |
+| `npm run build` | Production build |
+| `npm test` | Tests (watch mode) |
+| `npm run test:ci` | Tests (CI, no watch) |
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Tests
 
-## Learn More
+```bash
+npm run test:ci
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Покрытие: `useAuth`, `filterPins`, `ProtectedRoute`, `AddPinForm`, `apiService` (15+ assertions).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Deploy
 
-### Code Splitting
+### Frontend (Vercel / Netlify)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Push repo to GitHub
+2. Import project on [Vercel](https://vercel.com) or [Netlify](https://netlify.com)
+3. Build command: `npm run build`
+4. Publish directory: `build`
+5. Environment variable: `REACT_APP_API_URL` = URL вашего API
 
-### Analyzing the Bundle Size
+Конфиги уже в репозитории: `vercel.json`, `netlify.toml`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### API (Render / Railway)
 
-### Making a Progressive Web App
+json-server нужно деплоить отдельно:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+# Пример для Render: Start Command
+npx json-server --watch db.json --host 0.0.0.0 --port $PORT
+```
 
-### Advanced Configuration
+После деплоя API укажите публичный URL в `REACT_APP_API_URL` на Vercel.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+**Локальная демонстрация на защите:** запустите `npm run server` + `npm start` — этого достаточно.
 
-### Deployment
+## Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```
+src/
+  components/     # UI (PinCard, ErrorBoundary, …)
+  pages/          # Routes (Home, PinDetail, ProfileLayout)
+  context/        # AuthContext, AppContext
+  hooks/          # useAuth, useLocalStorage
+  services/       # api.js
+  utils/          # storage, filterPins
+```
 
-### `npm run build` fails to minify
+## Defense Talking Points
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Context vs Redux:** мало глобального state → Context достаточно
+- **Custom hook `useAuth`:** инкапсулирует auth + storage, без пароля в session
+- **useEffect cleanup:** toast timer в `AppContext`
+- **API error demo:** остановите `npm run server` → на главной появится ошибка + «Повторить»
+- **Nested routes:** ProfileLayout + `<Outlet />` для saved/created
 
+## Notes
 
-1. Project Proposal 
-
-Project Idea: "Visual Discovery App" is a web-based platform designed for finding, categorizing, and saving visual content. It serves as an interactive image gallery where users can explore inspiration for various projects.
-Target Audience: Designers, artists, content creators, and hobbyists looking for structured visual inspiration.
-Problem it solves: Finding and organizing visual references across the internet can be chaotic. This app provides a centralized, user-friendly space to discover, filter, and interact with images (similar to moodboards).
-MVP Features: An interactive masonry image feed, category-based filtering, individual image view, and basic engagement features (like/comment simulation).
-
-2. SPA Theory Questions 
-
-What is a Single Page Application (SPA)?
-A Single Page Application (SPA) is a web application or website that interacts with the user by dynamically rewriting the current web page with new data from the web server, instead of the default method of a web browser loading entire new pages. This results in faster transitions and a more native app-like experience.
-
-How does SPA differ from traditional Multi-Page Applications (MPA)?
-In a traditional MPA, every time a user clicks a link or submits a form, the browser requests a completely new HTML page from the server, causing a full page reload. In an SPA, only the initial HTML, CSS, and JS are loaded once. Subsequent interactions fetch only necessary data (usually via JSON) and update the DOM dynamically without reloading the page.
-
-What is the Virtual DOM?
-The Virtual DOM is a lightweight, in-memory representation of the actual Real DOM. When a component's state changes, React updates the Virtual DOM first, compares it with the previous version (a process called "diffing"), and calculates the most efficient way to update the Real DOM, changing only the necessary elements.
-
-Why does React use a component-based architecture?
-Component-based architecture allows developers to break down complex user interfaces into small, isolated, and reusable pieces of code (components). This makes the code easier to maintain, test, and debug. It also promotes code reusability across the application, significantly speeding up the development process.
+- Auth — client-side mock для учебного проекта
+- Sidebar Messages/Notifications — toast «скоро»

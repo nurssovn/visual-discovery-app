@@ -1,34 +1,44 @@
 import React, { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import PinCard from './PinCard'; // Убедись, что путь к PinCard правильный
+import { useAuthContext } from '../context/AuthContext';
+import PinCard from './PinCard';
+import { canDeletePin } from '../utils/filterPins';
 
 function SavedPins() {
-  // 1. Достаем user из контекста
-  const { pins, user, handleDeletePin, handleToggleSave } = useContext(AppContext);
+  const { pins, isLoading, handleDeletePin, handleToggleSave } = useContext(AppContext);
+  const { user } = useAuthContext();
 
-  // 2. НОВАЯ ЛОГИКА ФИЛЬТРАЦИИ: ищем пины, где в массиве savedBy есть имя текущего юзера
-  const savedPins = pins.filter(pin => 
-    pin.savedBy && user && pin.savedBy.includes(user.username)
+  const savedPins = pins.filter(
+    (pin) => pin.savedBy && user && pin.savedBy.includes(user.username)
   );
 
-  return (
-    <div className="masonry-grid" style={{ marginTop: '20px' }}>
-      {savedPins.length > 0 ? (
-        savedPins.map((pin) => (
-          <PinCard 
-            key={pin.id} 
-            id={pin.id} 
-            image={pin.image} 
-            saved={true} // Раз пин в этой вкладке, значит он точно сохранен этим юзером
-            onDelete={handleDeletePin} 
+  if (isLoading) {
+    return <p className="page-message">Загрузка сохранённых...</p>;
+  }
+
+  if (savedPins.length > 0) {
+    return (
+      <div className="masonry-grid profile-saved-grid">
+        {savedPins.map((pin) => (
+          <PinCard
+            key={pin.id}
+            id={pin.id}
+            image={pin.image}
+            saved
+            canDelete={canDeletePin(pin, user.username)}
+            onDelete={handleDeletePin}
             onToggleSave={handleToggleSave}
           />
-        ))
-      ) : (
-        <h3 style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', color: '#777', marginTop: '50px' }}>
-          У вас пока нет сохраненных пинов 😢
-        </h3>
-      )}
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="profile-empty-state">
+      <div className="empty-icon">🎨</div>
+      <h3>Здесь пока пусто</h3>
+      <p>Сохраняйте пины на главной — они появятся в этой вкладке.</p>
     </div>
   );
 }

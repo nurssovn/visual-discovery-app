@@ -1,71 +1,112 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import React, { useState, useContext } from 'react'; 
-import { AppProvider, AppContext } from './context/AppContext'; 
+import { Routes, Route, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useContext, useEffect, Suspense, lazy } from 'react';
+import { AuthProvider, useAuthContext } from './context/AuthContext';
+import { AppProvider, AppContext } from './context/AppContext';
 
-import PinDetail from './pages/PinDetail';       
-import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
+import Sidebar from './components/Sidebar';
 import AddPinForm from './components/AddPinForm';
-import ProfileLayout from './pages/ProfileLayout'; 
-import SavedPins from './components/SavedPins';     
-import Login from './pages/Login'; // Импорт компонента логина
-import ProtectedRoute from './components/ProtectedRoute'; 
+import SavedPins from './components/SavedPins';
+import CreatedPins from './components/CreatedPins';
+import Login from './pages/Login';
+import NotFound from './pages/NotFound';
+import ProtectedRoute from './components/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
+import Toast from './components/Toast';
 import './App.css';
 
-function AppContent() {
-  // Достали isLoginOpen из контекста
-  const { theme, toggleTheme, handleAddPin, isLoginOpen } = useContext(AppContext);
+const PinDetail = lazy(() => import('./pages/PinDetail'));
+const ProfileLayout = lazy(() => import('./pages/ProfileLayout'));
+
+function PageLoader() {
+  return <div className="page-message">Загрузка страницы...</div>;
+}
+
+function MainLayout() {
+  const { user, openLogin } = useAuthContext();
+  const { handleAddPin, showToast } = useContext(AppContext);
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleOpenForm = () => {
+    if (!user) {
+      openLogin();
+      return;
+    }
+    setIsFormOpen(true);
+  };
+
+  const handleAdd = async (pin) => {
+    const ok = await handleAddPin(pin);
+    if (ok) setIsFormOpen(false);
+  };
 
   return (
     <div className="app-container">
-      <Sidebar onOpenForm={() => setIsFormOpen(true)} theme={theme} toggleTheme={toggleTheme} />
-      
-      <Routes>
-        <Route path="/" element={<Home />} />
-        {/* РОУТ /login МЫ УДАЛИЛИ ОТСЮДА */}
-        <Route path="/pin/:id" element={<PinDetail />} />
-        
-        {/* ЗАЩИЩАЕМ РОУТ СОЗДАНИЯ */}
-        <Route path="/create" element={
-          <ProtectedRoute>
-            <div className="create-page-wrapper">
-              <AddPinForm onAdd={handleAddPin} onClose={() => window.history.back()} />
-            </div>
-          </ProtectedRoute>
-        } />
-        
-        {/* ЗАЩИЩАЕМ РОУТ ПРОФИЛЯ */}
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <ProfileLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Navigate to="saved" replace />} />
-          <Route path="saved" element={<SavedPins />} />
-        </Route>
+      <Sidebar onOpenForm={handleOpenForm} onComingSoon={(message) => showToast(message)} />
 
-        <Route path="*" element={<div style={{padding: "100px"}}><h2>404 - Страница не найдена</h2></div>} />
-      </Routes>
-      
-      {/* МОДАЛЬНЫЕ ОКНА: они рендерятся поверх всех страниц */}
-      {isFormOpen && (
-        <ProtectedRoute>
-          <AddPinForm onClose={() => setIsFormOpen(false)} onAdd={handleAddPin} />
-        </ProtectedRoute>
-      )}
+      <main className="main-content">
+        <Outlet />
+      </main>
 
-      {/* НАША НОВАЯ МОДАЛКА ЛОГИНА */}
-      {isLoginOpen && <Login />}
-
+      {isFormOpen && <AddPinForm onAdd={handleAdd} onClose={() => setIsFormOpen(false)} />}
     </div>
+  );
+}
+
+function AppContent() {
+  const { isLoginOpen, openLogin, closeLogin } = useAuthContext();
+  const { toastMessage } = useContext(AppContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state?.openLogin) {
+      openLogin();
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, location.pathname, openLogin, navigate]);
+
+  return (
+    <>
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/pin/:id" element={<PinDetail />} />
+
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfileLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Navigate to="saved" replace />} />
+                <Route path="saved" element={<SavedPins />} />
+                <Route path="created" element={<CreatedPins />} />
+              </Route>
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
+
+      {isLoginOpen && <Login onClose={closeLogin} />}
+
+      <Toast message={toastMessage} />
+    </>
   );
 }
 
 export default function App() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <AuthProvider>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </AuthProvider>
   );
 }

@@ -1,67 +1,63 @@
-import React, { useState, useContext } from 'react';
-import { AppContext } from '../context/AppContext';
+import React, { useState } from 'react';
+import { useAuthContext } from '../context/AuthContext';
 
-function Login() {
-  const [isLoginMode, setIsLoginMode] = useState(true); // true = Вход, false = Регистрация
+function Login({ onClose: onCloseProp }) {
+  const [isLoginMode, setIsLoginMode] = useState(true);
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState(''); // Стейт для показа ошибок
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const { login, register, closeLogin } = useContext(AppContext);
+  const { login, register, closeLogin } = useAuthContext();
+  const close = onCloseProp || closeLogin;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrorMsg(''); // Очищаем старые ошибки
+    setErrorMsg('');
 
     if (!name.trim() || !password.trim()) {
       setErrorMsg('Пожалуйста, заполните все поля!');
       return;
     }
 
-    let result;
-    if (isLoginMode) {
-      result = login(name, password); // Пытаемся войти
-    } else {
-      result = register(name, password); // Пытаемся зарегистрироваться
-    }
+    const result = isLoginMode ? login(name, password) : register(name, password);
 
-    // Если функция вернула success: true - закрываем окно
     if (result.success) {
-      closeLogin();
+      close();
     } else {
-      // Иначе показываем ошибку (Неверный пароль, или Юзер существует)
       setErrorMsg(result.message);
     }
   };
 
   return (
-    <div className="login-modal-overlay" onClick={closeLogin}>
+    <div className="login-modal-overlay" onClick={close}>
       <div className="login-modal-card" onClick={(e) => e.stopPropagation()}>
-        
-        <button className="login-modal-close" onClick={closeLogin}>✕</button>
+        <button type="button" className="login-modal-close" onClick={close}>
+          ✕
+        </button>
 
-        <div className="login-modal-icon">👁️‍🗨️</div>
+        <div className="login-modal-icon">V</div>
         <h2 className="login-modal-title">Visual Discovery App</h2>
-        
-        <p className="login-modal-desc" style={{ marginBottom: '15px' }}>
-          {isLoginMode ? 'С возвращением! Введите данные для входа.' : 'Создайте аккаунт, чтобы разблокировать все функции!'}
+
+        <p className="login-modal-desc">
+          {isLoginMode
+            ? 'С возвращением! Введите данные для входа.'
+            : 'Создайте аккаунт, чтобы сохранять пины и открывать профиль.'}
         </p>
 
-        {/* Вывод ошибки красным цветом */}
-        {errorMsg && <p style={{ color: 'red', fontSize: '14px', marginBottom: '15px', fontWeight: 'bold' }}>{errorMsg}</p>}
+        {errorMsg && <p className="login-modal-error">{errorMsg}</p>}
 
         <form onSubmit={handleSubmit} className="login-modal-form">
-          <input 
-            type="text" 
-            placeholder="Ваше имя" 
+          <input
+            type="text"
+            placeholder="Ваше имя"
             autoFocus
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="login-modal-input"
           />
-          <input 
-            type="password" 
-            placeholder="Ваш пароль" 
+          <input
+            type="password"
+            placeholder="Ваш пароль"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="login-modal-input"
@@ -71,17 +67,18 @@ function Login() {
           </button>
         </form>
 
-        {/* Переключатель Вход/Регистрация */}
-        <p style={{ marginTop: '20px', fontSize: '14px', color: '#666' }}>
+        <p className="login-modal-switch">
           {isLoginMode ? 'Нет аккаунта? ' : 'Уже есть аккаунт? '}
-          <span 
-            onClick={() => { setIsLoginMode(!isLoginMode); setErrorMsg(''); }}
-            style={{ color: '#e60023', cursor: 'pointer', fontWeight: 'bold', textDecoration: 'underline' }}
+          <span
+            className="login-modal-switch-link"
+            onClick={() => {
+              setIsLoginMode(!isLoginMode);
+              setErrorMsg('');
+            }}
           >
             {isLoginMode ? 'Создать' : 'Войти'}
           </span>
         </p>
-
       </div>
     </div>
   );

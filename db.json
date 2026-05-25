@@ -6,26 +6,15 @@
       "title": "Modest Outfit",
       "category": "outfit",
       "saved": true,
-      "savedBy": [
-        "@lunacy"
-      ]
-    },
-    {
-      "id": "17",
-      "image": "https://i.pinimg.com/736x/e3/41/fc/e341fc979ba0c6545c1582b0c2223eee.jpg",
-      "title": "Cozy Bedroom",
-      "category": "home",
-      "saved": true,
-      "savedBy": [
-        "@lunacy"
-      ]
+      "savedBy": []
     },
     {
       "id": "33",
       "image": "https://i.pinimg.com/1200x/1d/3a/9b/1d3a9b1a69cc6965b9480fb82a3d284e.jpg",
       "title": "Interior Wall",
       "category": "wall",
-      "saved": false
+      "saved": false,
+      "savedBy": []
     },
     {
       "id": "41",
@@ -42,7 +31,10 @@
       "image": "https://i.pinimg.com/736x/3d/ba/5e/3dba5ed2c9404b548ff911d9b6aa5ee5.jpg",
       "title": "Aesthetic Pasta",
       "category": "food",
-      "saved": false
+      "saved": false,
+      "savedBy": [
+        "@nurss1"
+      ]
     },
     {
       "id": "9MhCGU6C3nE",
@@ -51,7 +43,8 @@
       "category": "aesthetic",
       "saved": true,
       "savedBy": [
-        "@nurssxe"
+        "@nurssxe",
+        "@lunacy"
       ]
     },
     {
@@ -59,7 +52,9 @@
       "image": "https://i.pinimg.com/736x/31/5f/7a/315f7a8115c60f26361c4adf6349098e.jpg",
       "title": "a",
       "category": "aesthetic",
-      "savedBy": []
+      "savedBy": [
+        "@nurssxe"
+      ]
     },
     {
       "id": "YC0EqRgIEyw",
@@ -80,14 +75,19 @@
       "image": "https://i.pinimg.com/736x/79/d0/90/79d090a8316cf5dc4b270d6858bfe045.jpg",
       "title": "sherry",
       "category": "outfit",
-      "savedBy": []
+      "savedBy": [
+        "@nurssxe"
+      ]
     },
     {
       "id": "BU3Z1bO6ryw",
       "image": "https://i.pinimg.com/736x/56/7d/b2/567db2607d78cafab74806ae6a2429b9.jpg",
       "title": "Jorge",
       "category": "outfit",
-      "savedBy": []
+      "savedBy": [
+        "@nurssxe",
+        "@nurss1"
+      ]
     },
     {
       "id": "P4LxFWBeTxc",
@@ -108,7 +108,10 @@
       "image": "https://i.pinimg.com/736x/85/c0/c2/85c0c2dabeb92cee3c165f79b2330dee.jpg",
       "title": "🥩 EL LOCO Paris | Steak, Wine & Cozy Dinner Vibes 🍷✨",
       "category": "food",
-      "savedBy": []
+      "savedBy": [
+        "@nurssxe",
+        "@nurss1"
+      ]
     },
     {
       "id": "lK3ibrp8Q_I",
@@ -129,7 +132,9 @@
       "image": "https://i.pinimg.com/736x/db/7f/f3/db7ff345930df88c2913a9941a9ca9d5.jpg",
       "title": "dream home",
       "category": "home",
-      "savedBy": []
+      "savedBy": [
+        "@nurss1"
+      ]
     },
     {
       "id": "JiuSvbjKqr4",
@@ -143,7 +148,93 @@
       "image": "https://i.pinimg.com/736x/94/b0/4c/94b04c4fb904efc673734d7ac74db9d8.jpg",
       "title": "desk setup ",
       "category": "home",
+      "savedBy": [
+        "@nurssxe"
+      ]
+    },
+    {
+      "id": "Uc0u8WGyFMQ",
+      "image": "https://i.pinimg.com/1200x/22/5f/8b/225f8b2c5ba08a13c227f8f27ab4a497.jpg",
+      "title": "nnn",
+      "category": "art",
       "savedBy": []
+    },
+    {
+      "id": "LClHXM3T_bE",
+      "image": "https://i.pinimg.com/1200x/bd/8c/0f/bd8c0fbfe11ef4948e2c0ccda66fd0e0.jpg",
+      "title": "bbbb",
+      "category": "all",
+      "savedBy": [
+        "@lunacy"
+      ]
+    },
+    {
+      "id": "l38ZtzEuaik",
+      "image": "https://i.pinimg.com/1200x/9b/3e/e7/9b3ee7e7f74057fd4be0139adab70329.jpg",
+      "title": "moon",
+      "category": "outfit",
+      "savedBy": [
+        "@nurss1",
+        "@lunacy"
+      ]
+    },
+    {
+      "image": "https://i.pinimg.com/736x/86/e5/88/86e588f0bd5f6b04f264120f1bfb784d.jpg",
+      "title": "wee",
+      "description": "",
+      "category": "aesthetic",
+      "savedBy": [],
+      "authorId": "@lunacy",
+      "id": "yqcKUAKWyFw"
+    },
+    {
+      "image": "https://i.pinimg.com/736x/b9/ca/6a/b9ca6ae2c0dba6dc1b6d025a8a2eaf3e.jpg",
+      "title": "a n n",
+      "description": "outfit into",
+      "category": "outfit",
+      "savedBy": [],
+      "authorId": "@lunacy",
+      "id": "nScMfxSXHLo"
+    },
+    {
+      "image": "https://i.pinimg.com/736x/02/9c/e3/029ce3f06207de4a1a5ae01cd38da8a9.jpg",
+      "title": "tabi",
+      "description": "No loose ends.",
+      "category": "art",
+      "savedBy": [
+        "@nurss1"
+      ],
+      "authorId": "@nurss1",
+      "id": "j8uvN_g9qio"
+    },
+    {
+      "image": "https://i.pinimg.com/474x/6a/16/ca/6a16caff0b84f33b894eae67d9cb1ab5.jpg",
+      "title": "genée",
+      "description": "Seiko SQ 7223-6020",
+      "category": "outfit",
+      "savedBy": [
+        "@nurss1"
+      ],
+      "authorId": "@nurss1",
+      "id": "s2zkH4LU8z8"
+    },
+    {
+      "image": "https://i.pinimg.com/736x/cf/e7/68/cfe7680f6a319519ef9733849a69809d.jpg",
+      "title": "🧸",
+      "description": "Blaythe doll",
+      "category": "aesthetic",
+      "savedBy": [],
+      "authorId": "@nurss1",
+      "id": "B1vmV1XYeQI"
+    },
+    {
+      "image": "https://i.pinimg.com/736x/9a/e4/62/9ae462acbbacc509ea1a7ca9a2417b97.jpg",
+      "title": "art mountains",
+      "description": "the way to light",
+      "category": "art",
+      "savedBy": [],
+      "authorId": "@nurss1",
+      "id": "K_L2nxlb7-A"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
